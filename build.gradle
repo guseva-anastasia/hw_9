@@ -1,0 +1,38 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation ('org.junit.jupiter:junit-jupiter:5.10.1',
+            'org.assertj:assertj-core:3.24.2',
+            'com.opencsv:opencsv:5.8',
+            'com.codeborne:pdf-test:1.9.0',
+            'com.codeborne:xls-test:1.4.3',
+            'com.fasterxml.jackson.core:jackson-core:2.18.2',
+            'com.fasterxml.jackson.core:jackson-databind:2.16.0',
+            'com.fasterxml.jackson.core:jackson-annotations:2.16.0',
+            'com.codeborne:selenide:7.7.0'
+    )
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+test {
+    useJUnitPlatform {
+        if (project.hasProperty("includeTags")) {
+            includeTags(project.property("includeTags") as String)
+        }
+    }
+}
