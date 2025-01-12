@@ -21,34 +21,30 @@ public class ZipFileTest {
 
     @DisplayName("Валидация .pdf файла внутри .zip архива")
     @Test
-    void validatePdfInZipFileTest() throws Exception {
-        try (InputStream is = cl.getResourceAsStream("ArchiveWithPdf.zip");) {
-            final ZipInputStream zis = new ZipInputStream(is);
+    void validatePdfInZipFileTest2() throws Exception {
+        try (ZipInputStream zis = new ZipInputStream(cl.getResourceAsStream("ArchiveWithPdf.zip"))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                if (!entry.isDirectory() && entry.getName().endsWith(".pdf")) {
+                    assertThat(entry.getName()).endsWith(".pdf");
                     PDF pdf = new PDF(zis);
                     assertThat(pdf).containsExactText("Тестовый pdf файл");
                 }
             }
         }
-    }
 
     @DisplayName("Валидация .csv файла внутри .zip архива")
     @Test
     void validateCsvInZipFileTest()  throws Exception {
-        try (InputStream is = cl.getResourceAsStream("ArchiveWithCsv.zip");) {
-            final ZipInputStream zis = new ZipInputStream(is);
+        try (ZipInputStream zis = new ZipInputStream(cl.getResourceAsStream("ArchiveWithCsv.zip"))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                if (!entry.isDirectory() && entry.getName().endsWith(".xlsx")) {
-                    CSVReader csvReader = new CSVReader(new InputStreamReader(zis,StandardCharsets.UTF_8));
-                    List<String[]> strings = csvReader.readAll();
-                    Assertions.assertEquals(10, strings.size());
-                    Assertions.assertArrayEquals(
+                assertThat(entry.getName()).endsWith(".csv");
+                CSVReader csvReader = new CSVReader(new InputStreamReader(zis,StandardCharsets.UTF_8));
+                List<String[]> strings = csvReader.readAll();
+                Assertions.assertEquals(10, strings.size());
+                Assertions.assertArrayEquals(
                             new String [] {"1","Eldon Base for stackable storage shelf, platinum","Muhammed MacIntyre","3","-213.25","38.94","35","Nunavut","Storage & Organization","0.8"},strings.get(0)
                     );
-                }
             }
         }
     }
@@ -56,18 +52,15 @@ public class ZipFileTest {
     @DisplayName("Валидация .xlsx файла внутри .zip архива")
     @Test
     void validateXlsxInZipFileTest() throws Exception {
-try (InputStream is = cl.getResourceAsStream("ArchiveWithXlsx.zip");) {
-            final ZipInputStream zis = new ZipInputStream(is);
+        try (ZipInputStream zis = new ZipInputStream(cl.getResourceAsStream("ArchiveWithXlsx.zip"))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                if (!entry.isDirectory() && entry.getName().contains(".csv")) {
-                    XLS xls = new XLS(zis);
-                    String value = xls.excel.getSheetAt(0).getRow(1).getCell(1).getStringCellValue();
-                    Assertions.assertTrue(value.contains("Тестовые данные 1"));
-                }
+                assertThat(entry.getName()).endsWith(".xlsx");
+                XLS xls = new XLS(zis);
+                String value = xls.excel.getSheetAt(0).getRow(1).getCell(1).getStringCellValue();
+                Assertions.assertTrue(value.contains("Тестовые данные 1"));
             }
         }
     }
-
 
 }
