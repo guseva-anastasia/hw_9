@@ -24,10 +24,12 @@ public class ZipFileTest {
     void validatePdfInZipFileTest2() throws Exception {
         try (ZipInputStream zis = new ZipInputStream(cl.getResourceAsStream("ArchiveWithPdf.zip"))) {
             ZipEntry entry;
+            ZipFile zipFile = new ZipFile(new File("src/test/resources/ArchiveWithPdf.zip"));
+            assertThat(zipFile.size()).isGreaterThan(0);
             while ((entry = zis.getNextEntry()) != null) {
-                    assertThat(entry.getName()).endsWith(".pdf");
-                    PDF pdf = new PDF(zis);
-                    assertThat(pdf).containsExactText("Тестовый pdf файл");
+                assertThat(entry.getName()).endsWith(".pdf");
+                PDF pdf = new PDF(zis);
+                assertThat(pdf).containsExactText("Тестовый pdf файл");
                 }
             }
         }
@@ -37,6 +39,8 @@ public class ZipFileTest {
     void validateCsvInZipFileTest()  throws Exception {
         try (ZipInputStream zis = new ZipInputStream(cl.getResourceAsStream("ArchiveWithCsv.zip"))) {
             ZipEntry entry;
+            ZipFile zipFile = new ZipFile(new File("src/test/resources/ArchiveWithCsv.zip"));
+            assertThat(zipFile.size()).isGreaterThan(0);
             while ((entry = zis.getNextEntry()) != null) {
                 assertThat(entry.getName()).endsWith(".csv");
                 CSVReader csvReader = new CSVReader(new InputStreamReader(zis,StandardCharsets.UTF_8));
@@ -54,6 +58,8 @@ public class ZipFileTest {
     void validateXlsxInZipFileTest() throws Exception {
         try (ZipInputStream zis = new ZipInputStream(cl.getResourceAsStream("ArchiveWithXlsx.zip"))) {
             ZipEntry entry;
+            ZipFile zipFile = new ZipFile(new File("src/test/resources/ArchiveWithXlsx.zip"));
+            assertThat(zipFile.size()).isGreaterThan(0);
             while ((entry = zis.getNextEntry()) != null) {
                 assertThat(entry.getName()).endsWith(".xlsx");
                 XLS xls = new XLS(zis);
